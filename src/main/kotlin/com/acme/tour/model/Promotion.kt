@@ -1,10 +1,10 @@
 package com.acme.tour.model
 
-data class Promocao(
+data class Promotion(
     val id: Long,
-    val descricao: String,
-    val preco: Double,
+    val description: String,
+    val price: Double,
     val local: String,
     val isAllInclusive: Boolean,
-    val qtdDias: Int,
+    val qtyDays: Int,
 )
