@@ -1,5 +1,6 @@
 package com.acme.tour.advice
 
+import com.acme.tour.exception.PromotionNotFoundException
 import com.acme.tour.model.ErrorResponse
 import com.fasterxml.jackson.core.JsonParseException
 import org.springframework.http.HttpStatus
@@ -25,6 +26,21 @@ class ExceptionHandler {
                 exception.message ?: "Invalid JSON format."
             ),
             HttpStatus.BAD_REQUEST
+        )
+    }
+
+    @ExceptionHandler(PromotionNotFoundException::class)
+    fun promotionNotFoundExceptionHandler(
+        req: HttpServletRequest,
+        res: HttpServletResponse,
+        exception: Exception
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity(
+            ErrorResponse(
+                PromotionNotFoundException::class.simpleName.toString(),
+                exception.message ?: "Promotion(s) not found."
+            ),
+            HttpStatus.NOT_FOUND
         )
     }
 }

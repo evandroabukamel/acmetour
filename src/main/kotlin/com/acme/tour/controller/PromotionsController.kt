@@ -1,5 +1,7 @@
 package com.acme.tour.controller
 
+import com.acme.tour.exception.PromotionNotFoundException
+import com.acme.tour.model.ErrorResponse
 import com.acme.tour.model.Promotion
 import com.acme.tour.model.ResponseJSON
 import com.acme.tour.service.PromotionService
@@ -26,10 +28,20 @@ class PromotionsController {
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<Promotion?> {
+    fun getById(@PathVariable id: Long): ResponseEntity<Any> {
         val promotion = promotionService.getById(id)
-        val statusCode = if (promotion != null) HttpStatus.OK else HttpStatus.NOT_FOUND
-        return ResponseEntity(promotion, statusCode)
+
+        if (promotion != null) {
+            return ResponseEntity(promotion, HttpStatus.OK)
+        }
+
+        return ResponseEntity(
+            ErrorResponse(
+                PromotionNotFoundException::class.simpleName.toString(),
+                "Promotion(s) not found."
+            ),
+            HttpStatus.NOT_FOUND
+        )
     }
 
     @PostMapping
