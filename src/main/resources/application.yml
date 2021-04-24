@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tour
+    username: root
+    password: example
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none # none, create, update, create-drop
+    generate:-ddl: true

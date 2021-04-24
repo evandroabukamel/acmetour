@@ -1,44 +1,54 @@
 package com.acme.tour.service.impl
 
 import com.acme.tour.model.Promotion
+import com.acme.tour.repository.PromotionRepository
 import com.acme.tour.service.PromotionService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class PromotionServiceImpl : PromotionService {
 
-    companion object {
-        val initialPromotions = arrayOf(
-            Promotion(1, "Maravilhosa viagem para Cancun", 4299.00, "Cancun", true, 7),
-            Promotion(2, "Tour em Hobbiton", 299.00, "New Zealand", true, 1),
-            Promotion(3, "Viagem para Wellington", 69.00, "New Zealand", false, 2),
-            Promotion(4, "Glacier Trekking in Franz-Josef", 349.00, "New Zealand", false, 3),
-        )
+    @Autowired
+    lateinit var promotionRepository: PromotionRepository
+
+    override fun getAll(page: Int, size: Int): List<Promotion> {
+        val pageble = PageRequest.of(page, size)
+        return promotionRepository.findAll(pageble).toList()
     }
 
-    val promotions = ConcurrentHashMap(initialPromotions.associateBy(Promotion::id))
-
-    override fun getAll(localFilter: String): List<Promotion> {
-        return promotions.filter {
-            it.value.local.contains(localFilter, true)
-        }.map(Map.Entry<Long, Promotion>::value).toList()
+    override fun getByLocal(
+        localFilter: String,
+        start: Int,
+        size: Int,
+    ): List<Promotion> {
+        val pageble = PageRequest.of(start, size)
+        return promotionRepository
+            .findAll(pageble)
+            .toList()
+            .filter {
+                it.local.contains(localFilter, true)
+            }.toList()
     }
 
     override fun getById(id: Long): Promotion? {
-        return promotions[id]
+        return promotionRepository.findById(id).orElseGet(null)
     }
 
     override fun create(promotion: Promotion) {
-        promotions[promotion.id] = promotion
+        this.promotionRepository.save(promotion)
     }
 
     override fun update(id: Long, promotion: Promotion) {
-        delete(id)
         create(promotion)
     }
 
     override fun delete(id: Long) {
-        promotions.remove(id)
+        this.promotionRepository.deleteById(id)
+    }
+
+    override fun count(): Long {
+        return this.promotionRepository.count()
     }
 }

@@ -4,7 +4,9 @@ import com.acme.tour.model.Promotion
 
 interface PromotionService {
 
-    fun getAll(localFilter: String = ""): List<Promotion>
+    fun getAll(page: Int, size: Int): List<Promotion>
+
+    fun getByLocal(localFilter: String = "", start: Int, size: Int): List<Promotion>
 
     fun getById(id: Long): Promotion?
 
@@ -13,4 +15,6 @@ interface PromotionService {
     fun update(id: Long, promotion: Promotion)
 
     fun delete(id: Long)
+
+    fun count(): Long
 }

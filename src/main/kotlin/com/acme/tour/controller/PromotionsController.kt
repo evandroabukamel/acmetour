@@ -19,10 +19,16 @@ class PromotionsController {
 
     @GetMapping
     fun getAll(
-        @RequestParam(name = "local", required = false, defaultValue = "")
-        localFilter: String
+        @RequestParam(name = "local", required = false, defaultValue = "") localFilter: String,
+        @RequestParam(required = false, defaultValue = "1") page: Int,
+        @RequestParam(required = false, defaultValue = "5") size: Int,
     ): ResponseEntity<List<Promotion>> {
-        val promocoes = promotionService.getAll(localFilter)
+        println("page = $page, size = $size")
+        val promocoes = if (localFilter.isEmpty())
+            promotionService.getAll(page, size)
+        else
+            promotionService.getByLocal(localFilter, page, size)
+
         val statusCode = if (promocoes.isEmpty()) HttpStatus.NOT_FOUND else HttpStatus.OK
         return ResponseEntity(promocoes, statusCode)
     }
@@ -46,13 +52,6 @@ class PromotionsController {
 
     @PostMapping
     fun create(@RequestBody promotion: Promotion): ResponseEntity<ResponseJSON> {
-        if (promotionService.getById(promotion.id) != null) {
-            val body = ResponseJSON(
-                message = "Promotion #${promotion.id} already exists."
-            )
-            return ResponseEntity(body, HttpStatus.CONFLICT)
-        }
-
         promotionService.create(promotion)
         val body = ResponseJSON(
             message = "Promotion created."
@@ -79,5 +78,13 @@ class PromotionsController {
         val statusCode = if (promotion != null) HttpStatus.OK else HttpStatus.NOT_FOUND
         promotionService.delete(id)
         return ResponseEntity(Unit, statusCode)
+    }
+
+    @GetMapping("/count")
+    fun count(): ResponseEntity<Map<String, Any>> {
+        val count = promotionService.count()
+        return ResponseEntity.ok().body(mapOf<String, Any>(
+            "count" to count
+        ))
     }
 }
