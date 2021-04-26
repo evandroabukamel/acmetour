@@ -20,8 +20,8 @@ class PromotionsController {
     @GetMapping
     fun getAll(
         @RequestParam(name = "local", required = false, defaultValue = "") localFilter: String,
-        @RequestParam(required = false, defaultValue = "1") page: Int,
-        @RequestParam(required = false, defaultValue = "5") size: Int,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "100") size: Int,
         @RequestParam(required = false, defaultValue = "") sortBy: String,
         @RequestParam(required = false, defaultValue = "") sortDirection: String,
     ): ResponseEntity<List<Promotion>> {

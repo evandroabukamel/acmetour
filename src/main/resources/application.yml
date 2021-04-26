@@ -4,9 +4,10 @@ spring:
     url: jdbc:mysql://localhost:3306/tour
     username: root
     password: example
+    initialization-mode: always
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none # none, create, update, create-drop
+      ddl-auto: create-drop # none, create, update, create-drop
     generate:-ddl: true
