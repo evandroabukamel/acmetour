@@ -4,9 +4,20 @@ import com.acme.tour.model.Promotion
 
 interface PromotionService {
 
-    fun getAll(page: Int, size: Int): List<Promotion>
+    fun getAll(
+        page: Int,
+        size: Int,
+        sortBy: String? = "",
+        sortDirection: String? = ""
+    ): List<Promotion>
 
-    fun getByLocal(localFilter: String = "", start: Int, size: Int): List<Promotion>
+    fun getByLocal(
+        localFilter: String = "",
+        page: Int,
+        size: Int,
+        sortBy: String? = "local",
+        sortDirection: String? = "ASC"
+    ): List<Promotion>
 
     fun getById(id: Long): Promotion?
 

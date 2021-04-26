@@ -22,15 +22,16 @@ class PromotionsController {
         @RequestParam(name = "local", required = false, defaultValue = "") localFilter: String,
         @RequestParam(required = false, defaultValue = "1") page: Int,
         @RequestParam(required = false, defaultValue = "5") size: Int,
+        @RequestParam(required = false, defaultValue = "") sortBy: String,
+        @RequestParam(required = false, defaultValue = "") sortDirection: String,
     ): ResponseEntity<List<Promotion>> {
-        println("page = $page, size = $size")
-        val promocoes = if (localFilter.isEmpty())
-            promotionService.getAll(page, size)
+        val promotions = if (localFilter.isEmpty())
+            promotionService.getAll(page, size, sortBy, sortDirection)
         else
-            promotionService.getByLocal(localFilter, page, size)
+            promotionService.getByLocal(localFilter, page, size, sortBy, sortDirection)
 
-        val statusCode = if (promocoes.isEmpty()) HttpStatus.NOT_FOUND else HttpStatus.OK
-        return ResponseEntity(promocoes, statusCode)
+        val statusCode = if (promotions.isEmpty()) HttpStatus.NOT_FOUND else HttpStatus.OK
+        return ResponseEntity(promotions, statusCode)
     }
 
     @GetMapping("/{id}")

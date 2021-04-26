@@ -5,6 +5,7 @@ import com.acme.tour.repository.PromotionRepository
 import com.acme.tour.service.PromotionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,17 +14,45 @@ class PromotionServiceImpl : PromotionService {
     @Autowired
     lateinit var promotionRepository: PromotionRepository
 
-    override fun getAll(page: Int, size: Int): List<Promotion> {
-        val pageble = PageRequest.of(page, size)
+    private fun getPageRequest(
+        page: Int,
+        size: Int,
+        sortBy: String?,
+        sortDirection: String?
+    ): PageRequest {
+        if (!sortBy.isNullOrEmpty()) {
+            val sort = Sort.by(
+                if (sortDirection?.toUpperCase() == "DESC")
+                    Sort.Direction.DESC
+                else Sort.Direction.ASC,
+                sortBy,
+            )
+
+            return PageRequest.of(page, size, sort)
+        }
+
+        return PageRequest.of(page, size)
+    }
+
+    override fun getAll(
+        page: Int,
+        size: Int,
+        sortBy: String?,
+        sortDirection: String?,
+    ): List<Promotion> {
+        val pageble = getPageRequest(page, size, sortBy, sortDirection)
         return promotionRepository.findAll(pageble).toList()
     }
 
     override fun getByLocal(
         localFilter: String,
-        start: Int,
+        page: Int,
         size: Int,
+        sortBy: String?,
+        sortDirection: String?,
     ): List<Promotion> {
-        val pageble = PageRequest.of(start, size)
+        val pageble = getPageRequest(page, size, sortBy, sortDirection)
+
         return promotionRepository
             .findAll(pageble)
             .toList()
