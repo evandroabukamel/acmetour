@@ -28,4 +28,8 @@ interface PromotionService {
     fun delete(id: Long)
 
     fun count(): Long
+
+    fun getPromotionsCheaperThan1000(): List<Promotion>
+
+    fun updatePriceByLocal(price: Double, local: String)
 }

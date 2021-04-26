@@ -88,4 +88,20 @@ class PromotionsController {
             "count" to count
         ))
     }
+
+    @GetMapping("/cheaper-than-1000")
+    fun getPromotionsCheaperThan1000(): ResponseEntity<List<Promotion>> {
+        val promotions = promotionService.getPromotionsCheaperThan1000()
+        val statusCode = if (promotions.isEmpty()) HttpStatus.NOT_FOUND else HttpStatus.OK
+        return ResponseEntity(promotions, statusCode)
+    }
+
+    @PutMapping("/update-price-by-local/{local}")
+    fun updatePriceByLocal(
+        @PathVariable local: String,
+        @RequestBody payload: Map<String, Any>
+    ): ResponseEntity<Unit> {
+        promotionService.updatePriceByLocal(payload["price"] as Double, local)
+        return ResponseEntity(Unit, HttpStatus.OK)
+    }
 }

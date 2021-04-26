@@ -66,7 +66,7 @@ class PromotionServiceImpl : PromotionService {
     }
 
     override fun create(promotion: Promotion) {
-        this.promotionRepository.save(promotion)
+        promotionRepository.save(promotion)
     }
 
     override fun update(id: Long, promotion: Promotion) {
@@ -74,10 +74,18 @@ class PromotionServiceImpl : PromotionService {
     }
 
     override fun delete(id: Long) {
-        this.promotionRepository.deleteById(id)
+        promotionRepository.deleteById(id)
     }
 
     override fun count(): Long {
-        return this.promotionRepository.count()
+        return promotionRepository.count()
+    }
+
+    override fun getPromotionsCheaperThan1000(): List<Promotion> {
+        return promotionRepository.findPromotionsCheaperThan(price = 1000.0)
+    }
+
+    override fun updatePriceByLocal(price: Double, local: String) {
+        promotionRepository.updatePriceByLocal(price, local)
     }
 }
