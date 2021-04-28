@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    active: prod
-
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/tour
@@ -10,11 +7,7 @@ spring:
     initialization-mode: never
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
-      ddl-auto: none # none, create, update, create-drop
-    generate:-ddl: true
-
-server:
-  servlet:
-    contextPath: /
+      ddl-auto: none
+    generate:-ddl: false
