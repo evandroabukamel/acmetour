@@ -4,6 +4,8 @@ import com.acme.tour.model.Promotion
 import com.acme.tour.repository.PromotionRepository
 import com.acme.tour.service.PromotionService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
@@ -34,6 +36,7 @@ class PromotionServiceImpl : PromotionService {
         return PageRequest.of(page, size)
     }
 
+    @Cacheable("promotions")
     override fun getAll(
         page: Int,
         size: Int,
@@ -65,14 +68,19 @@ class PromotionServiceImpl : PromotionService {
         return promotionRepository.findById(id).orElseGet(null)
     }
 
+    @CacheEvict("promotions", allEntries = true)
     override fun create(promotion: Promotion) {
         promotionRepository.save(promotion)
     }
 
+
+    @CacheEvict("promotions", allEntries = true)
     override fun update(id: Long, promotion: Promotion) {
         create(promotion)
     }
 
+
+    @CacheEvict("promotions", allEntries = true)
     override fun delete(id: Long) {
         promotionRepository.deleteById(id)
     }
@@ -85,6 +93,8 @@ class PromotionServiceImpl : PromotionService {
         return promotionRepository.findPromotionsCheaperThan(price = 1000.0)
     }
 
+
+    @CacheEvict("promotions", allEntries = true)
     override fun updatePriceByLocal(price: Double, local: String) {
         promotionRepository.updatePriceByLocal(price, local)
     }
