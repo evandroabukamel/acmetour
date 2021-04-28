@@ -10,10 +10,10 @@ spring:
     initialization-mode: never
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none # none, create, update, create-drop
-    generate:-ddl: true
+    generate:-ddl: false
 
 server:
   servlet:
